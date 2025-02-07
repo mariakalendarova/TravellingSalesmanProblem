@@ -17,6 +17,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -33,6 +34,8 @@ public:
     QLineEdit *city2Input;
     QLineEdit *distanceInput;
     QPushButton *resetButton;
+    QPushButton *startButton;
+    QTextEdit *algorithmStepsTextEdit;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -45,7 +48,7 @@ public:
         centralwidget->setObjectName("centralwidget");
         graphicsView = new QGraphicsView(centralwidget);
         graphicsView->setObjectName("graphicsView");
-        graphicsView->setGeometry(QRect(0, 0, 701, 551));
+        graphicsView->setGeometry(QRect(0, 110, 601, 461));
         addCityButton = new QPushButton(centralwidget);
         addCityButton->setObjectName("addCityButton");
         addCityButton->setGeometry(QRect(0, 30, 601, 31));
@@ -67,6 +70,12 @@ public:
         resetButton = new QPushButton(centralwidget);
         resetButton->setObjectName("resetButton");
         resetButton->setGeometry(QRect(600, 0, 101, 111));
+        startButton = new QPushButton(centralwidget);
+        startButton->setObjectName("startButton");
+        startButton->setGeometry(QRect(700, 0, 101, 111));
+        algorithmStepsTextEdit = new QTextEdit(centralwidget);
+        algorithmStepsTextEdit->setObjectName("algorithmStepsTextEdit");
+        algorithmStepsTextEdit->setGeometry(QRect(600, 109, 201, 441));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -87,6 +96,7 @@ public:
         addCityButton->setText(QCoreApplication::translate("MainWindow", "Add City", nullptr));
         addRouteButton->setText(QCoreApplication::translate("MainWindow", "Add Route", nullptr));
         resetButton->setText(QCoreApplication::translate("MainWindow", "Reset", nullptr));
+        startButton->setText(QCoreApplication::translate("MainWindow", "Start", nullptr));
     } // retranslateUi
 
 };

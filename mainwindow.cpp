@@ -4,6 +4,7 @@
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
 #include <QGraphicsTextItem>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -11,17 +12,21 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Create a graphics scene and set it to the QGraphicsView
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
+
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::visualizeNextCity); // Connect timer to new slot
+    tourIndex = 0;
 }
+
 
 MainWindow::~MainWindow() {
     delete ui;
 }
 
 void MainWindow::on_addCityButton_clicked() {
-    QString cityName = ui->cityNameInput->text().trimmed(); // Get city name from input field
+    QString cityName = ui->cityNameInput->text().trimmed();
     if (cityName.isEmpty()) {
         QMessageBox::warning(this, "Warning", "Please enter a valid city name.");
         return;
@@ -32,35 +37,30 @@ void MainWindow::on_addCityButton_clicked() {
         return;
     }
 
-    // Generate random position for the city
-    double x = rand() % 400; // Random x-coordinate (adjust as needed)
-    double y = rand() % 300; // Random y-coordinate (adjust as needed)
+    double x = rand() % 400;
+    double y = rand() % 300;
 
-    // Create a larger circle representing the city
-    QGraphicsEllipseItem *city = new QGraphicsEllipseItem(x, y, 60, 60); // Circle size: 60x60
-    city->setBrush(Qt::white); // Set circle color to white
-
+    QGraphicsEllipseItem *city = new QGraphicsEllipseItem(x, y, 60, 60);
+    city->setBrush(Qt::white);
     scene->addItem(city);
 
-    // Store the city's name and position in the map
-    QPointF center(x + 30, y + 30); // Center point of the circle
+    QPointF center(x + 30, y + 30);
     cityMap[cityName] = center;
 
-    // Add city name inside the circle
     QGraphicsTextItem *cityLabel = new QGraphicsTextItem(cityName);
-    cityLabel->setPos(center.x() - 20, center.y() - 10); // Adjust position to fit in circle
-    cityLabel->setDefaultTextColor(Qt::black); // Set text color to black
-    cityLabel->setFont(QFont("Arial", 12)); // Set font size to 12
+    cityLabel->setPos(center.x() - 20, center.y() - 10);
+    cityLabel->setDefaultTextColor(Qt::black);
+    cityLabel->setFont(QFont("Arial", 12));
 
     scene->addItem(cityLabel);
 
-    ui->cityNameInput->clear(); // Clear input field after adding
+    ui->cityNameInput->clear();
 }
 
 void MainWindow::on_addRouteButton_clicked() {
-    QString city1Name = ui->city1Input->text().trimmed(); // Get first city name
-    QString city2Name = ui->city2Input->text().trimmed(); // Get second city name
-    QString distanceStr = ui->distanceInput->text().trimmed(); // Get distance
+    QString city1Name = ui->city1Input->text().trimmed();
+    QString city2Name = ui->city2Input->text().trimmed();
+    QString distanceStr = ui->distanceInput->text().trimmed();
 
     if (!cityMap.contains(city1Name) || !cityMap.contains(city2Name)) {
         QMessageBox::warning(this, "Warning", "One or both cities do not exist.");
@@ -79,39 +79,90 @@ void MainWindow::on_addRouteButton_clicked() {
         return;
     }
 
-    // Draw a line between the two cities with dark green color and increased thickness
+    // Store the route and distance
+    QPair<QString, QString> route(city1Name, city2Name);
+    routeMap[route] = distance;
+
     QPointF pos1 = cityMap[city1Name];
     QPointF pos2 = cityMap[city2Name];
 
-    QGraphicsLineItem *route = new QGraphicsLineItem(QLineF(pos1, pos2));
+    QGraphicsLineItem *routeLine = new QGraphicsLineItem(QLineF(pos1, pos2));
 
     QPen pen(Qt::darkGreen);
-    pen.setWidth(3); // Set line thickness to 3 pixels
-    route->setPen(pen);
+    pen.setWidth(3);
+    routeLine->setPen(pen);
 
-    scene->addItem(route);
+    scene->addItem(routeLine);
 
-    // Add distance label on top of the route with larger font size
     QGraphicsTextItem *distanceLabel = new QGraphicsTextItem(QString("%1 km").arg(distance));
-
-    // Calculate midpoint for placing distance label
     QPointF midPoint((pos1.x() + pos2.x()) / 2, (pos1.y() + pos2.y()) / 2);
-
-    distanceLabel->setPos(midPoint.x(), midPoint.y() - 10); // Position it slightly above midpoint of route
-    distanceLabel->setDefaultTextColor(Qt::black); // Set text color to black
-    distanceLabel->setFont(QFont("Arial", 12)); // Set font size to 12
+    distanceLabel->setPos(midPoint.x(), midPoint.y() - 10);
+    distanceLabel->setDefaultTextColor(Qt::black);
+    distanceLabel->setFont(QFont("Arial", 12));
 
     scene->addItem(distanceLabel);
 }
 
-void MainWindow::on_resetButton_clicked() {
-    // Clear all items from the scene and reset data structures
-    scene->clear();          // Clear all graphical items from the view
-    cityMap.clear();         // Clear all stored cities
 
-    // Clear input fields for user convenience
+void MainWindow::on_resetButton_clicked() {
+    scene->clear();
+    cityMap.clear();
+    routeMap.clear(); // Clear the routes as well
+
     ui->cityNameInput->clear();
     ui->city1Input->clear();
     ui->city2Input->clear();
     ui->distanceInput->clear();
 }
+
+void MainWindow::on_startButton_clicked() {
+    if (cityMap.isEmpty()) {
+        QMessageBox::warning(this, "Warning", "Please add cities before starting the algorithm.");
+        return;
+    }
+
+    tspSolver = new TSPsolver(cityMap, routeMap);
+
+    QString startCity = cityMap.keys().first();
+    currentTour = tspSolver->solveTSP(startCity);
+
+    tourIndex = 0;
+
+    // Clear the QTextEdit at the start of the algorithm
+    ui->algorithmStepsTextEdit->clear();
+
+    timer->start(500);
+}
+
+
+
+void MainWindow::visualizeNextCity() {
+    if (tourIndex < currentTour.size() - 1) {
+        QString city1Name = currentTour[tourIndex];
+        QString city2Name = currentTour[tourIndex + 1];
+
+        // Append the algorithm step to the QTextEdit
+        QString stepText = QString("Step %1: Start at node %2, Next city node %3\n")
+                               .arg(tourIndex + 1)
+                               .arg(city1Name)
+                               .arg(city2Name);
+        ui->algorithmStepsTextEdit->append(stepText);
+
+        QPointF pos1 = cityMap[city1Name];
+        QPointF pos2 = cityMap[city2Name];
+
+        QGraphicsLineItem *tourLine = new QGraphicsLineItem(QLineF(pos1, pos2));
+        QPen pen(Qt::red);
+        pen.setWidth(5);
+        tourLine->setPen(pen);
+        scene->addItem(tourLine);
+
+        tourIndex++; // Increment the index for the next city
+    } else {
+        timer->stop(); // Stop the timer when the tour is complete
+        QString finalText = QString("Final Tour Complete!\n");
+        ui->algorithmStepsTextEdit->append(finalText);
+    }
+}
+
+
