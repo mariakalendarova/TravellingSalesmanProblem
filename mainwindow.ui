@@ -6,21 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1278</width>
+    <height>877</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="maximumSize">
+    <size>
+     <width>1603</width>
+     <height>679</height>
+    </size>
+   </property>
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>110</y>
-      <width>601</width>
-      <height>461</height>
+      <x>340</x>
+      <y>0</y>
+      <width>791</width>
+      <height>571</height>
      </rect>
     </property>
    </widget>
@@ -29,7 +35,7 @@
      <rect>
       <x>0</x>
       <y>30</y>
-      <width>601</width>
+      <width>341</width>
       <height>31</height>
      </rect>
     </property>
@@ -42,7 +48,7 @@
      <rect>
       <x>0</x>
       <y>80</y>
-      <width>601</width>
+      <width>341</width>
       <height>31</height>
      </rect>
     </property>
@@ -55,7 +61,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>601</width>
+      <width>341</width>
       <height>31</height>
      </rect>
     </property>
@@ -65,7 +71,7 @@
      <rect>
       <x>0</x>
       <y>60</y>
-      <width>191</width>
+      <width>131</width>
       <height>21</height>
      </rect>
     </property>
@@ -73,9 +79,9 @@
    <widget class="QLineEdit" name="city2Input">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>130</x>
       <y>60</y>
-      <width>211</width>
+      <width>141</width>
       <height>21</height>
      </rect>
     </property>
@@ -83,9 +89,9 @@
    <widget class="QLineEdit" name="distanceInput">
     <property name="geometry">
      <rect>
-      <x>400</x>
+      <x>270</x>
       <y>60</y>
-      <width>201</width>
+      <width>71</width>
       <height>21</height>
      </rect>
     </property>
@@ -93,10 +99,10 @@
    <widget class="QPushButton" name="resetButton">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>0</y>
-      <width>101</width>
-      <height>111</height>
+      <x>0</x>
+      <y>110</y>
+      <width>171</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="text">
@@ -106,10 +112,10 @@
    <widget class="QPushButton" name="startButton">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>0</y>
-      <width>101</width>
-      <height>111</height>
+      <x>170</x>
+      <y>110</y>
+      <width>171</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="text">
@@ -119,10 +125,10 @@
    <widget class="QTextEdit" name="algorithmStepsTextEdit">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>109</y>
-      <width>201</width>
-      <height>441</height>
+      <x>0</x>
+      <y>260</y>
+      <width>341</width>
+      <height>311</height>
      </rect>
     </property>
    </widget>
@@ -132,7 +138,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1278</width>
      <height>21</height>
     </rect>
    </property>

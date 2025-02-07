@@ -5,6 +5,8 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsTextItem>
 #include <QDebug>
+#include <QRandomGenerator>
+#include <QtMath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     scene = new QGraphicsScene(this);
+    scene->setSceneRect(0, 0, 800, 600); // Set the scene rectangle here, adjust size if needed
     ui->graphicsView->setScene(scene);
 
     timer = new QTimer(this);
@@ -37,14 +40,43 @@ void MainWindow::on_addCityButton_clicked() {
         return;
     }
 
-    double x = rand() % 400;
-    double y = rand() % 300;
+    const int nodeSize = 60;
+    const int minDistance = 100; // Minimum distance between nodes
 
-    QGraphicsEllipseItem *city = new QGraphicsEllipseItem(x, y, 60, 60);
+    QRectF sceneRect = scene->sceneRect();
+
+    QPointF position;
+    bool validPosition = false;
+    int attempts = 0;
+    const int maxAttempts = 100; // Limit attempts to prevent infinite loop
+
+    while (!validPosition && attempts < maxAttempts) {
+        attempts++;
+        qreal x = QRandomGenerator::global()->generateDouble() * (sceneRect.width() - nodeSize) + sceneRect.x() + nodeSize/2;
+        qreal y = QRandomGenerator::global()->generateDouble() * (sceneRect.height() - nodeSize) + sceneRect.y() + nodeSize/2;
+        position = QPointF(x, y);
+
+        validPosition = true;
+        for (const QPointF& existingPosition : cityMap.values()) {
+            qreal distance = qSqrt(qPow(position.x() - existingPosition.x(), 2) +
+                                   qPow(position.y() - existingPosition.y(), 2));
+            if (distance < minDistance) {
+                validPosition = false;
+                break; // Reject and try again
+            }
+        }
+    }
+
+    if (!validPosition) {
+        QMessageBox::warning(this, "Warning", "Could not find a valid position after " + QString::number(maxAttempts) + " attempts!");
+        return;
+    }
+
+    QGraphicsEllipseItem *city = new QGraphicsEllipseItem(position.x() - nodeSize/2, position.y() - nodeSize/2, nodeSize, nodeSize);
     city->setBrush(Qt::white);
     scene->addItem(city);
 
-    QPointF center(x + 30, y + 30);
+    QPointF center(position.x(), position.y());
     cityMap[cityName] = center;
 
     QGraphicsTextItem *cityLabel = new QGraphicsTextItem(cityName);
@@ -97,7 +129,7 @@ void MainWindow::on_addRouteButton_clicked() {
     QGraphicsTextItem *distanceLabel = new QGraphicsTextItem(QString("%1 km").arg(distance));
     QPointF midPoint((pos1.x() + pos2.x()) / 2, (pos1.y() + pos2.y()) / 2);
     distanceLabel->setPos(midPoint.x(), midPoint.y() - 10);
-    distanceLabel->setDefaultTextColor(Qt::black);
+    distanceLabel->setDefaultTextColor(Qt::white);
     distanceLabel->setFont(QFont("Arial", 12));
 
     scene->addItem(distanceLabel);
@@ -131,7 +163,7 @@ void MainWindow::on_startButton_clicked() {
     // Clear the QTextEdit at the start of the algorithm
     ui->algorithmStepsTextEdit->clear();
 
-    timer->start(500);
+    timer->start(2000);
 }
 
 
