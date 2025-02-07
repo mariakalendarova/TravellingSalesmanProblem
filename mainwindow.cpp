@@ -124,21 +124,48 @@ void MainWindow::on_addRouteButton_clicked() {
     QPointF pos1 = cityMap[city1Name];
     QPointF pos2 = cityMap[city2Name];
 
-    QGraphicsLineItem *routeLine = new QGraphicsLineItem(QLineF(pos1, pos2));
+    // Calculate offset to avoid starting inside the circle
+    const int nodeSize = 60; // Same size used for drawing cities
+    QLineF line(pos1, pos2);
+    double length = line.length();
 
-    QPen pen(Qt::darkGreen);
-    pen.setWidth(3);
-    routeLine->setPen(pen);
+    if (length > nodeSize) {
+        double ratio = (nodeSize / 2) / length;
+        QPointF offsetPos1(pos1.x() + ratio * (pos2.x() - pos1.x()),
+                           pos1.y() + ratio * (pos2.y() - pos1.y()));
 
-    scene->addItem(routeLine);
+        QPointF offsetPos2(pos2.x() - ratio * (pos2.x() - pos1.x()),
+                           pos2.y() - ratio * (pos2.y() - pos1.y()));
 
-    QGraphicsTextItem *distanceLabel = new QGraphicsTextItem(QString("%1 km").arg(distance));
-    QPointF midPoint((pos1.x() + pos2.x()) / 2, (pos1.y() + pos2.y()) / 2);
-    distanceLabel->setPos(midPoint.x(), midPoint.y() - 10);
-    distanceLabel->setDefaultTextColor(Qt::white);
-    distanceLabel->setFont(QFont("Arial", 12));
+        QGraphicsLineItem *routeLine = new QGraphicsLineItem(QLineF(offsetPos1, offsetPos2));
 
-    scene->addItem(distanceLabel);
+        QPen pen(Qt::darkGreen);
+        pen.setWidth(3);
+        routeLine->setPen(pen);
+
+        scene->addItem(routeLine);
+
+        // Adjust distance label position accordingly
+        QPointF midPoint((offsetPos1.x() + offsetPos2.x()) / 2,
+                         (offsetPos1.y() + offsetPos2.y()) / 2);
+
+        QGraphicsTextItem *distanceLabel = new QGraphicsTextItem(QString("%1 km").arg(distance));
+
+        distanceLabel->setPos(midPoint.x(), midPoint.y());
+
+        // Ensure the text remains on top of the lines
+        distanceLabel->setZValue(2); // Higher value than lines
+
+        distanceLabel->setDefaultTextColor(Qt::white);
+
+        distanceLabel->setFont(QFont("Arial", 12));
+
+        scene->addItem(distanceLabel);
+
+    } else { // If line is too short to adjust without intersecting circles
+        QMessageBox::warning(this, "Warning", "Cities are too close.");
+        return;
+    }
 }
 
 
@@ -189,7 +216,26 @@ void MainWindow::visualizeNextCity() {
         QPointF pos1 = cityMap[city1Name];
         QPointF pos2 = cityMap[city2Name];
 
-        QGraphicsLineItem *tourLine = new QGraphicsLineItem(QLineF(pos1, pos2));
+        // Calculate offset to avoid starting inside the circle
+        const int nodeSize = 60; // Same size used for drawing cities
+        QLineF line(pos1, pos2);
+        double length = line.length();
+
+        QPointF adjustedPos1 = pos1;
+        QPointF adjustedPos2 = pos2;
+
+        // If line length is greater than the node size, adjust the positions
+        if (length > nodeSize) {
+            double ratio = (nodeSize / 2) / length;
+            adjustedPos1 = QPointF(pos1.x() + ratio * (pos2.x() - pos1.x()),
+                                   pos1.y() + ratio * (pos2.y() - pos1.y()));
+
+            adjustedPos2 = QPointF(pos2.x() - ratio * (pos2.x() - pos1.x()),
+                                   pos2.y() - ratio * (pos2.y() - pos1.y()));
+        }
+
+        // Create the route line with adjusted positions
+        QGraphicsLineItem *tourLine = new QGraphicsLineItem(QLineF(adjustedPos1, adjustedPos2));
         QPen pen(Qt::red);
         pen.setWidth(5);
         tourLine->setPen(pen);
@@ -202,5 +248,6 @@ void MainWindow::visualizeNextCity() {
         ui->algorithmStepsTextEdit->append(finalText);
     }
 }
+
 
 
