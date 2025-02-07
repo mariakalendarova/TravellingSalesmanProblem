@@ -80,10 +80,16 @@ void MainWindow::on_addCityButton_clicked() {
     cityMap[cityName] = center;
 
     QGraphicsTextItem *cityLabel = new QGraphicsTextItem(cityName);
-    cityLabel->setPos(center.x() - 20, center.y() - 10);
-    cityLabel->setDefaultTextColor(Qt::black);
-    cityLabel->setFont(QFont("Arial", 12));
+    QFont font("Arial", 12);
+    cityLabel->setFont(font);
 
+    // Get the bounding rectangle of the text
+    QRectF textRect = cityLabel->boundingRect();
+
+    // Center the text within the circle
+    cityLabel->setPos(position.x() - textRect.width() / 2, position.y() - textRect.height() / 2);
+
+    cityLabel->setDefaultTextColor(Qt::black);
     scene->addItem(cityLabel);
 
     ui->cityNameInput->clear();
