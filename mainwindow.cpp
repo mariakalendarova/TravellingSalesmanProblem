@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QRandomGenerator>
 #include <QtMath>
+#include <QResizeEvent>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,16 +18,30 @@ MainWindow::MainWindow(QWidget *parent)
     scene = new QGraphicsScene(this);
     scene->setSceneRect(0, 0, 800, 600); // Set the scene rectangle here, adjust size if needed
     ui->graphicsView->setScene(scene);
-
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::visualizeNextCity); // Connect timer to new slot
     tourIndex = 0;
+
+    ui->cityNameInput->setPlaceholderText("Enter city name");
+    ui->city1Input->setPlaceholderText("First city name");
+    ui->city2Input->setPlaceholderText("Second city name");
+    ui->distanceInput->setPlaceholderText("Enter distance");
+
 }
 
 
 MainWindow::~MainWindow() {
     delete ui;
 }
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+    QMainWindow::resizeEvent(event); // Call base class event
+
+    if (!scene->items().isEmpty()) {
+        ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+    }
+}
+
 
 void MainWindow::on_addCityButton_clicked() {
     QString cityName = ui->cityNameInput->text().trimmed();

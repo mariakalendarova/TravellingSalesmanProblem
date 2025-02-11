@@ -20,118 +20,66 @@
      <height>679</height>
     </size>
    </property>
-   <widget class="QGraphicsView" name="graphicsView">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>0</y>
-      <width>791</width>
-      <height>571</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="addCityButton">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>30</y>
-      <width>341</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add City</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="addRouteButton">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>80</y>
-      <width>341</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add Route</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="cityNameInput">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>341</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="city1Input">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>60</y>
-      <width>131</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="city2Input">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>60</y>
-      <width>141</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="distanceInput">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>60</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="resetButton">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>110</y>
-      <width>171</width>
-      <height>151</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Reset</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="startButton">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>110</y>
-      <width>171</width>
-      <height>151</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="algorithmStepsTextEdit">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>260</y>
-      <width>341</width>
-      <height>311</height>
-     </rect>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" colspan="4">
+     <widget class="QLineEdit" name="cityNameInput"/>
+    </item>
+    <item row="0" column="4" rowspan="6">
+     <widget class="QGraphicsView" name="graphicsView"/>
+    </item>
+    <item row="1" column="0" colspan="4">
+     <widget class="QPushButton" name="addCityButton">
+      <property name="text">
+       <string>Add City</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLineEdit" name="city1Input">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1" colspan="2">
+     <widget class="QLineEdit" name="city2Input">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="3">
+     <widget class="QLineEdit" name="distanceInput">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" colspan="4">
+     <widget class="QPushButton" name="addRouteButton">
+      <property name="text">
+       <string>Add Route</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="2">
+     <widget class="QPushButton" name="resetButton">
+      <property name="text">
+       <string>Reset</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2" colspan="2">
+     <widget class="QPushButton" name="startButton">
+      <property name="text">
+       <string>Start</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="4">
+     <widget class="QTextEdit" name="algorithmStepsTextEdit"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -139,9 +87,15 @@
      <x>0</x>
      <y>0</y>
      <width>1278</width>
-     <height>21</height>
+     <height>37</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuTSP">
+    <property name="title">
+     <string>TSP</string>
+    </property>
+   </widget>
+   <addaction name="menuTSP"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

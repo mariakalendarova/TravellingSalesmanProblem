@@ -40,6 +40,11 @@ private:
     QTimer *timer;
     int tourIndex; // Current index in the tour
     QList<QString> currentTour; // Store the current tour being visualized
+    double scaleFactor = 1.0; // Tracks the current scale factor
+
+protected:
+    void resizeEvent(QResizeEvent *event) override;
+
 
 };
 
