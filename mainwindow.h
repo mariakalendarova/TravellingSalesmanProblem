@@ -8,6 +8,7 @@
 #include <QPair> // Add this line
 #include "tsp_solver.h" // Add this line
 #include <QTimer> // Add this line
+#include <QUndoStack>
 
 
 QT_BEGIN_NAMESPACE
@@ -29,9 +30,14 @@ private slots:
     void visualizeNextCity();
 
 
+    void on_redoButton_clicked();
+
+    void on_undoButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
+    QUndoStack *undoStack;
     QMap<QString, QPointF> cityMap;
     QMap<QPair<QString, QString>, double> routeMap; // Store routes and distances
     TSPsolver* tspSolver = nullptr; //instance of TSPsolver class

@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "undoCity.h"
+#include "undoRoute.h"
 #include <QMessageBox>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
@@ -12,6 +14,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , undoStack(new QUndoStack(this)) // Proper initialization of the undo stack
+
 {
     ui->setupUi(this);
 
@@ -107,6 +111,9 @@ void MainWindow::on_addCityButton_clicked() {
     cityLabel->setDefaultTextColor(Qt::black);
     scene->addItem(cityLabel);
 
+    QUndoCommand *addCityCmd = new CityRouteCommand(scene, cityName, position, city, cityLabel);
+    undoStack->push(addCityCmd);
+
     ui->cityNameInput->clear();
 }
 
@@ -176,6 +183,9 @@ void MainWindow::on_addRouteButton_clicked() {
         distanceLabel->setFont(QFont("Arial", 12));
 
         scene->addItem(distanceLabel);
+
+        QUndoCommand *addRouteCmd = new RouteCommand(scene, city1Name, city2Name, routeLine, distanceLabel);
+        undoStack->push(addRouteCmd);
 
     } else { // If line is too short to adjust without intersecting circles
         QMessageBox::warning(this, "Warning", "Cities are too close.");
@@ -265,4 +275,20 @@ void MainWindow::visualizeNextCity() {
 }
 
 
+
+
+void MainWindow::on_redoButton_clicked()
+{
+    if (undoStack->canRedo()) {  // Check if there is an action to redo
+        undoStack->redo();  // Redo the last undone action
+    }
+}
+
+
+void MainWindow::on_undoButton_clicked()
+{
+    if (undoStack->canUndo()) {  // Check if there is an action to undo
+        undoStack->undo();  // Undo the last action
+    }
+}
 

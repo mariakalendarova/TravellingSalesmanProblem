@@ -31,15 +31,17 @@ public:
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QLineEdit *cityNameInput;
+    QLineEdit *distanceInput;
+    QLineEdit *city1Input;
+    QPushButton *addRouteButton;
+    QTextEdit *algorithmStepsTextEdit;
+    QPushButton *startButton;
+    QLineEdit *city2Input;
+    QPushButton *resetButton;
     QGraphicsView *graphicsView;
     QPushButton *addCityButton;
-    QLineEdit *city1Input;
-    QLineEdit *city2Input;
-    QLineEdit *distanceInput;
-    QPushButton *addRouteButton;
-    QPushButton *resetButton;
-    QPushButton *startButton;
-    QTextEdit *algorithmStepsTextEdit;
+    QPushButton *undoButton;
+    QPushButton *redoButton;
     QMenuBar *menubar;
     QMenu *menuTSP;
     QStatusBar *statusbar;
@@ -59,50 +61,60 @@ public:
 
         gridLayout->addWidget(cityNameInput, 0, 0, 1, 4);
 
-        graphicsView = new QGraphicsView(centralwidget);
-        graphicsView->setObjectName("graphicsView");
+        distanceInput = new QLineEdit(centralwidget);
+        distanceInput->setObjectName("distanceInput");
 
-        gridLayout->addWidget(graphicsView, 0, 4, 6, 1);
-
-        addCityButton = new QPushButton(centralwidget);
-        addCityButton->setObjectName("addCityButton");
-
-        gridLayout->addWidget(addCityButton, 1, 0, 1, 4);
+        gridLayout->addWidget(distanceInput, 2, 3, 1, 1);
 
         city1Input = new QLineEdit(centralwidget);
         city1Input->setObjectName("city1Input");
 
         gridLayout->addWidget(city1Input, 2, 0, 1, 1);
 
-        city2Input = new QLineEdit(centralwidget);
-        city2Input->setObjectName("city2Input");
-
-        gridLayout->addWidget(city2Input, 2, 1, 1, 2);
-
-        distanceInput = new QLineEdit(centralwidget);
-        distanceInput->setObjectName("distanceInput");
-
-        gridLayout->addWidget(distanceInput, 2, 3, 1, 1);
-
         addRouteButton = new QPushButton(centralwidget);
         addRouteButton->setObjectName("addRouteButton");
 
         gridLayout->addWidget(addRouteButton, 3, 0, 1, 4);
 
-        resetButton = new QPushButton(centralwidget);
-        resetButton->setObjectName("resetButton");
+        algorithmStepsTextEdit = new QTextEdit(centralwidget);
+        algorithmStepsTextEdit->setObjectName("algorithmStepsTextEdit");
 
-        gridLayout->addWidget(resetButton, 4, 0, 1, 2);
+        gridLayout->addWidget(algorithmStepsTextEdit, 6, 0, 1, 4);
 
         startButton = new QPushButton(centralwidget);
         startButton->setObjectName("startButton");
 
         gridLayout->addWidget(startButton, 4, 2, 1, 2);
 
-        algorithmStepsTextEdit = new QTextEdit(centralwidget);
-        algorithmStepsTextEdit->setObjectName("algorithmStepsTextEdit");
+        city2Input = new QLineEdit(centralwidget);
+        city2Input->setObjectName("city2Input");
 
-        gridLayout->addWidget(algorithmStepsTextEdit, 5, 0, 1, 4);
+        gridLayout->addWidget(city2Input, 2, 1, 1, 2);
+
+        resetButton = new QPushButton(centralwidget);
+        resetButton->setObjectName("resetButton");
+
+        gridLayout->addWidget(resetButton, 4, 0, 1, 2);
+
+        graphicsView = new QGraphicsView(centralwidget);
+        graphicsView->setObjectName("graphicsView");
+
+        gridLayout->addWidget(graphicsView, 0, 4, 7, 1);
+
+        addCityButton = new QPushButton(centralwidget);
+        addCityButton->setObjectName("addCityButton");
+
+        gridLayout->addWidget(addCityButton, 1, 0, 1, 4);
+
+        undoButton = new QPushButton(centralwidget);
+        undoButton->setObjectName("undoButton");
+
+        gridLayout->addWidget(undoButton, 5, 0, 1, 2);
+
+        redoButton = new QPushButton(centralwidget);
+        redoButton->setObjectName("redoButton");
+
+        gridLayout->addWidget(redoButton, 5, 2, 1, 2);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -125,13 +137,15 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        addCityButton->setText(QCoreApplication::translate("MainWindow", "Add City", nullptr));
-        city1Input->setText(QString());
-        city2Input->setText(QString());
         distanceInput->setText(QString());
+        city1Input->setText(QString());
         addRouteButton->setText(QCoreApplication::translate("MainWindow", "Add Route", nullptr));
-        resetButton->setText(QCoreApplication::translate("MainWindow", "Reset", nullptr));
         startButton->setText(QCoreApplication::translate("MainWindow", "Start", nullptr));
+        city2Input->setText(QString());
+        resetButton->setText(QCoreApplication::translate("MainWindow", "Reset", nullptr));
+        addCityButton->setText(QCoreApplication::translate("MainWindow", "Add City", nullptr));
+        undoButton->setText(QCoreApplication::translate("MainWindow", "Undo", nullptr));
+        redoButton->setText(QCoreApplication::translate("MainWindow", "Redo", nullptr));
         menuTSP->setTitle(QCoreApplication::translate("MainWindow", "TSP", nullptr));
     } // retranslateUi
 
