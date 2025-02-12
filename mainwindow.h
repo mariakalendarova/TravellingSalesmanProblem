@@ -28,12 +28,9 @@ private slots:
     void on_resetButton_clicked();
     void on_startButton_clicked();
     void visualizeNextCity();
-
-
+    void resetCityHighlights();
     void on_redoButton_clicked();
-
     void on_undoButton_clicked();
-
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
@@ -47,6 +44,10 @@ private:
     int tourIndex; // Current index in the tour
     QList<QString> currentTour; // Store the current tour being visualized
     double scaleFactor = 1.0; // Tracks the current scale factor
+    QSet<QString> visitedCities; // To keep track of visited cities
+    QString getCityNameFromEllipse(QGraphicsEllipseItem *cityItem);
+
+
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

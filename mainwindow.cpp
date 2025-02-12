@@ -199,6 +199,8 @@ void MainWindow::on_resetButton_clicked() {
     cityMap.clear();
     routeMap.clear(); // Clear the routes as well
 
+    resetCityHighlights();  // Reset city highlights
+
     ui->cityNameInput->clear();
     ui->city1Input->clear();
     ui->city2Input->clear();
@@ -210,6 +212,8 @@ void MainWindow::on_startButton_clicked() {
         QMessageBox::warning(this, "Warning", "Please add cities before starting the algorithm.");
         return;
     }
+
+    resetCityHighlights();
 
     tspSolver = new TSPsolver(cityMap, routeMap);
 
@@ -231,25 +235,40 @@ void MainWindow::visualizeNextCity() {
         QString city1Name = currentTour[tourIndex];
         QString city2Name = currentTour[tourIndex + 1];
 
-        // Append the algorithm step to the QTextEdit
-        QString stepText = QString("Step %1: Start at node %2, Next city node %3\n")
+        // Append step details to QTextEdit
+        QString stepText = QString("Step %1: Start at %2, Next city %3")
                                .arg(tourIndex + 1)
                                .arg(city1Name)
                                .arg(city2Name);
         ui->algorithmStepsTextEdit->append(stepText);
 
+        // Reset all city highlights before highlighting the current one
+        resetCityHighlights();
+
+        // Highlight only the currently visited city (city1Name) with a yellow border
+        for (QGraphicsItem *item : scene->items()) {
+            if (QGraphicsEllipseItem *cityItem = dynamic_cast<QGraphicsEllipseItem*>(item)) {
+                QString cityName = getCityNameFromEllipse(cityItem);
+
+                if (cityName == city1Name) {
+                    cityItem->setPen(QPen(Qt::red, 5));  // Yellow border, keep fill white
+                }
+            }
+        }
+
+        // Draw the travel route between cities
         QPointF pos1 = cityMap[city1Name];
         QPointF pos2 = cityMap[city2Name];
 
-        // Calculate offset to avoid starting inside the circle
-        const int nodeSize = 60; // Same size used for drawing cities
+        bool lineExists = false;
+
+        const int nodeSize = 60;
         QLineF line(pos1, pos2);
         double length = line.length();
 
         QPointF adjustedPos1 = pos1;
         QPointF adjustedPos2 = pos2;
 
-        // If line length is greater than the node size, adjust the positions
         if (length > nodeSize) {
             double ratio = (nodeSize / 2) / length;
             adjustedPos1 = QPointF(pos1.x() + ratio * (pos2.x() - pos1.x()),
@@ -259,21 +278,54 @@ void MainWindow::visualizeNextCity() {
                                    pos2.y() - ratio * (pos2.y() - pos1.y()));
         }
 
-        // Create the route line with adjusted positions
         QGraphicsLineItem *tourLine = new QGraphicsLineItem(QLineF(adjustedPos1, adjustedPos2));
         QPen pen(Qt::red);
         pen.setWidth(5);
         tourLine->setPen(pen);
         scene->addItem(tourLine);
 
-        tourIndex++; // Increment the index for the next city
+        tourIndex++;
     } else {
-        timer->stop(); // Stop the timer when the tour is complete
-        QString finalText = QString("Final Tour Complete!\n");
-        ui->algorithmStepsTextEdit->append(finalText);
+        // Stop timer when the tour is complete
+        timer->stop();
+        ui->algorithmStepsTextEdit->append("Final Tour Complete!");
+
+        // Ensure the start city is highlighted at the end
+        resetCityHighlights();
+        QString startCity = currentTour.first();
+
+        for (QGraphicsItem *item : scene->items()) {
+            if (QGraphicsEllipseItem *cityItem = dynamic_cast<QGraphicsEllipseItem*>(item)) {
+                QString cityName = getCityNameFromEllipse(cityItem);
+
+                if (cityName == startCity) {
+                    cityItem->setPen(QPen(Qt::red, 5));  // Keep the start city highlighted
+                }
+            }
+        }
     }
 }
 
+
+
+void MainWindow::resetCityHighlights() {
+    for (QGraphicsItem *item : scene->items()) {
+        if (QGraphicsEllipseItem *cityItem = dynamic_cast<QGraphicsEllipseItem*>(item)) {
+            cityItem->setBrush(Qt::white);  // Keep the fill color white
+            cityItem->setPen(QPen(Qt::black, 2));  // Reset the border to black
+        }
+    }
+}
+
+
+QString MainWindow::getCityNameFromEllipse(QGraphicsEllipseItem *cityItem) {
+    for (auto it = cityMap.begin(); it != cityMap.end(); ++it) {
+        if (QPointF(it.value().x(), it.value().y()) == cityItem->rect().center()) {
+            return it.key();  // Return the city name
+        }
+    }
+    return "";
+}
 
 
 
