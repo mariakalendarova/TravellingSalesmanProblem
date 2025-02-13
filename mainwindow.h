@@ -36,15 +36,15 @@ private:
     QGraphicsScene *scene;
     QUndoStack *undoStack;
     QMap<QString, QPointF> cityMap;
-    QMap<QPair<QString, QString>, double> routeMap; // Store routes and distances
-    TSPsolver* tspSolver = nullptr; //instance of TSPsolver class
+    QMap<QPair<QString, QString>, double> routeMap;         // Store routes and distances
+    TSPsolver* tspSolver = nullptr;
     void visualizeTour(const QList<QString>& tour);
 
     QTimer *timer;
-    int tourIndex; // Current index in the tour
-    QList<QString> currentTour; // Store the current tour being visualized
-    double scaleFactor = 1.0; // Tracks the current scale factor
-    QSet<QString> visitedCities; // To keep track of visited cities
+    int tourIndex;
+    QList<QString> currentTour;
+    double scaleFactor = 1.0;
+    QSet<QString> visitedCities;
     QString getCityNameFromEllipse(QGraphicsEllipseItem *cityItem);
 
 
