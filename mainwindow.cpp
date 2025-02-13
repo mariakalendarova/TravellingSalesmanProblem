@@ -10,10 +10,6 @@
 #include <QRandomGenerator>
 #include <QtMath>
 #include <QResizeEvent>
-#include <QFileDialog>
-#include <QImage>
-#include <QPainter>
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -27,16 +23,13 @@ MainWindow::MainWindow(QWidget *parent)
     scene->setSceneRect(0, 0, 800, 600); // Set the scene rectangle here, adjust size if needed
     ui->graphicsView->setScene(scene);
     timer = new QTimer(this);
-
     connect(timer, &QTimer::timeout, this, &MainWindow::visualizeNextCity); // Connect timer to new slot
-    connect(ui->saveGraphButton, &QPushButton::clicked, this, &MainWindow::on_saveGraphButton_clicked);
     tourIndex = 0;
 
     ui->cityNameInput->setPlaceholderText("Enter city name");
     ui->city1Input->setPlaceholderText("First city name");
     ui->city2Input->setPlaceholderText("Second city name");
     ui->distanceInput->setPlaceholderText("Enter distance");
-    
 
 }
 
@@ -343,24 +336,7 @@ void MainWindow::on_redoButton_clicked()
     }
 }
 
-void MainWindow::on_saveGraphButton_clicked() {
-    QString filePath = QFileDialog::getSaveFileName(this, "Save Graph", "", "PNG Image (*.png);;JPEG Image (*.jpg);;BMP Image (*.bmp)");
 
-    if (filePath.isEmpty()) {
-        return; // User canceled the dialog
-    }
-
-    // Create an image based on the scene size
-    QImage image(scene->sceneRect().size().toSize(), QImage::Format_ARGB32);
-    image.fill(Qt::white); // Set background color
-
-    // Render the scene onto the image
-    QPainter painter(&image);
-    scene->render(&painter);
-    image.save(filePath);
-
-    QMessageBox::information(this, "Success", "Graph saved successfully!");
-}
 void MainWindow::on_undoButton_clicked()
 {
     if (undoStack->canUndo()) {  // Check if there is an action to undo
