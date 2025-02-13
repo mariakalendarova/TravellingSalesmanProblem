@@ -42,6 +42,7 @@ public:
     QGraphicsView *graphicsView;
     QPushButton *addCityButton;
     QPushButton *redoButton;
+    QPushButton *saveGraphButton;
     QMenuBar *menubar;
     QMenu *menuTSP;
     QStatusBar *statusbar;
@@ -116,10 +117,15 @@ public:
 
         gridLayout->addWidget(redoButton, 10, 4, 1, 1);
 
+        saveGraphButton = new QPushButton(centralwidget);
+        saveGraphButton->setObjectName("saveGraphButton");
+
+        gridLayout->addWidget(saveGraphButton, 9, 0, 1, 4);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1278, 37));
+        menubar->setGeometry(QRect(0, 0, 1278, 21));
         menuTSP = new QMenu(menubar);
         menuTSP->setObjectName("menuTSP");
         MainWindow->setMenuBar(menubar);
@@ -146,6 +152,7 @@ public:
         resetButton->setText(QCoreApplication::translate("MainWindow", "Reset", nullptr));
         addCityButton->setText(QCoreApplication::translate("MainWindow", "Add City", nullptr));
         redoButton->setText(QCoreApplication::translate("MainWindow", "Redo", nullptr));
+        saveGraphButton->setText(QCoreApplication::translate("MainWindow", "Save Graph", nullptr));
         menuTSP->setTitle(QCoreApplication::translate("MainWindow", "TSP", nullptr));
     } // retranslateUi
 

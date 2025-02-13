@@ -31,6 +31,8 @@ private slots:
     void resetCityHighlights();
     void on_redoButton_clicked();
     void on_undoButton_clicked();
+    void on_saveGraphButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;

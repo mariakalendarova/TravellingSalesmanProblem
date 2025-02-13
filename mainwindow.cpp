@@ -10,6 +10,9 @@
 #include <QRandomGenerator>
 #include <QtMath>
 #include <QResizeEvent>
+#include <QFileDialog>
+#include <QPainter>
+#include <QImage>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -327,8 +330,6 @@ QString MainWindow::getCityNameFromEllipse(QGraphicsEllipseItem *cityItem) {
     return "";
 }
 
-
-
 void MainWindow::on_redoButton_clicked()
 {
     if (undoStack->canRedo()) {  // Check if there is an action to redo
@@ -342,5 +343,26 @@ void MainWindow::on_undoButton_clicked()
     if (undoStack->canUndo()) {  // Check if there is an action to undo
         undoStack->undo();  // Undo the last action
     }
+}
+
+
+void MainWindow::on_saveGraphButton_clicked()
+{
+    QString filePath = QFileDialog::getSaveFileName(this, "Save Graph", "", "PNG Image (*.png);;JPEG Image (*.jpg);;BMP Image (*.bmp)");
+
+    if (filePath.isEmpty()) {
+        return; // User canceled the dialog
+    }
+
+    // Create an image based on the scene size
+    QImage image(scene->sceneRect().size().toSize(), QImage::Format_ARGB32);
+    image.fill(Qt::white); // Set background color
+
+    // Render the scene onto the image
+    QPainter painter(&image);
+    scene->render(&painter);
+    image.save(filePath);
+
+    QMessageBox::information(this, "Success", "Graph saved successfully!");
 }
 
