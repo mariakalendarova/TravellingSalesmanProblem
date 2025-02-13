@@ -7,7 +7,6 @@
 
 TSPsolver::TSPsolver(const QMap<QString, QPointF>& cities, const QMap<QPair<QString, QString>, double>& routes)
     : cities(cities), routes(routes) {
-    // Example: Validate that all routes exist between cities in the map
     for (const QString& city1 : cities.keys()) {
         for (const QString& city2 : cities.keys()) {
             if (city1 != city2) {
@@ -29,13 +28,13 @@ QList<QString> TSPsolver::solveTSP(const QString& startCity) {
     tour.append(currentCity);
     visited.insert(currentCity);
 
-    while (visited.size() < cities.size()) { // Continue until all cities are visited
+    while (visited.size() < cities.size()) {            // Continue until all cities are visited
         QString nearestCity;
         double minDistance = -1.0;
 
         // Iterate through all cities to find the nearest unvisited city
         for (const QString& city : cities.keys()) {
-            if (!visited.contains(city)) { // Only consider unvisited cities
+            if (!visited.contains(city)) {              // Only consider unvisited cities
                 double dist = distance(currentCity, city);
                 if (dist >= 0 && (minDistance < 0 || dist < minDistance)) {
                     minDistance = dist;
@@ -47,12 +46,12 @@ QList<QString> TSPsolver::solveTSP(const QString& startCity) {
         if (!nearestCity.isEmpty()) {
             // Add the nearest unvisited city to the tour
             tour.append(nearestCity);
-            visited.insert(nearestCity); // Mark it as visited
-            currentCity = nearestCity;  // Move to this city
+            visited.insert(nearestCity);                // Mark it as visited
+            currentCity = nearestCity;                  // Move to this city
         } else {
             // If no unvisited connected cities are found, something went wrong
             qDebug() << "Error: No unvisited connected cities found.";
-            return tour; // Return the partial tour
+            return tour;                                // Return the partial tour
         }
     }
 
@@ -73,7 +72,7 @@ double TSPsolver::distance(const QString& city1, const QString& city2) const {
         if (routes.contains(route)) {
             return routes[route];
         } else {
-            return -1.0; // Indicate no direct route exists
+            return -1.0;                            // Indicate no direct route exists
         }
     }
 }

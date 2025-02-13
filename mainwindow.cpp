@@ -33,16 +33,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->city1Input->setPlaceholderText("First city name");
     ui->city2Input->setPlaceholderText("Second city name");
     ui->distanceInput->setPlaceholderText("Enter distance");
-
 }
-
 
 MainWindow::~MainWindow() {
     delete ui;
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
-    QMainWindow::resizeEvent(event); // Call base class event
+    QMainWindow::resizeEvent(event);
 
     if (!scene->items().isEmpty()) {
         ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
@@ -63,14 +61,14 @@ void MainWindow::on_addCityButton_clicked() {
     }
 
     const int nodeSize = 60;
-    const int minDistance = 100; // Minimum distance between nodes
+    const int minDistance = 100;            // Minimum distance between nodes
 
     QRectF sceneRect = scene->sceneRect();
 
     QPointF position;
     bool validPosition = false;
     int attempts = 0;
-    const int maxAttempts = 100; // Limit attempts to prevent infinite loop
+    const int maxAttempts = 100;            // Limit attempts to prevent infinite loop
 
     while (!validPosition && attempts < maxAttempts) {
         attempts++;
@@ -196,13 +194,12 @@ void MainWindow::on_addRouteButton_clicked() {
     }
 }
 
-
 void MainWindow::on_resetButton_clicked() {
     scene->clear();
     cityMap.clear();
-    routeMap.clear(); // Clear the routes as well
+    routeMap.clear();
 
-    resetCityHighlights();  // Reset city highlights
+    resetCityHighlights();
 
     ui->cityNameInput->clear();
     ui->city1Input->clear();
@@ -245,7 +242,6 @@ void MainWindow::visualizeNextCity() {
                                .arg(city2Name);
         ui->algorithmStepsTextEdit->append(stepText);
 
-        // Reset all city highlights before highlighting the current one
         resetCityHighlights();
 
         // Highlight only the currently visited city (city1Name) with a yellow border
@@ -314,7 +310,7 @@ void MainWindow::visualizeNextCity() {
 void MainWindow::resetCityHighlights() {
     for (QGraphicsItem *item : scene->items()) {
         if (QGraphicsEllipseItem *cityItem = dynamic_cast<QGraphicsEllipseItem*>(item)) {
-            cityItem->setBrush(Qt::white);  // Keep the fill color white
+            cityItem->setBrush(Qt::white);          // Keep the fill color white
             cityItem->setPen(QPen(Qt::black, 2));  // Reset the border to black
         }
     }
@@ -332,16 +328,16 @@ QString MainWindow::getCityNameFromEllipse(QGraphicsEllipseItem *cityItem) {
 
 void MainWindow::on_redoButton_clicked()
 {
-    if (undoStack->canRedo()) {  // Check if there is an action to redo
-        undoStack->redo();  // Redo the last undone action
+    if (undoStack->canRedo()) {      // Check if there is an action to redo
+        undoStack->redo();          // Redo the last undone action
     }
 }
 
 
 void MainWindow::on_undoButton_clicked()
 {
-    if (undoStack->canUndo()) {  // Check if there is an action to undo
-        undoStack->undo();  // Undo the last action
+    if (undoStack->canUndo()) {     // Check if there is an action to undo
+        undoStack->undo();          // Undo the last action
     }
 }
 
@@ -351,12 +347,12 @@ void MainWindow::on_saveGraphButton_clicked()
     QString filePath = QFileDialog::getSaveFileName(this, "Save Graph", "", "PNG Image (*.png);;JPEG Image (*.jpg);;BMP Image (*.bmp)");
 
     if (filePath.isEmpty()) {
-        return; // User canceled the dialog
+        return;
     }
 
     // Create an image based on the scene size
     QImage image(scene->sceneRect().size().toSize(), QImage::Format_ARGB32);
-    image.fill(Qt::white); // Set background color
+    image.fill(Qt::black);
 
     // Render the scene onto the image
     QPainter painter(&image);
@@ -364,5 +360,35 @@ void MainWindow::on_saveGraphButton_clicked()
     image.save(filePath);
 
     QMessageBox::information(this, "Success", "Graph saved successfully!");
+}
+
+
+void MainWindow::on_loadGraphButton_clicked()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, "Load Graph", "", "Images (*.png *.jpg *.bmp)");
+
+    if (filePath.isEmpty()) {
+        return;
+    }
+
+    // Load the image from file
+    QPixmap pixmap(filePath);
+
+    if (pixmap.isNull()) {
+        QMessageBox::warning(this, "Error", "Failed to load image!");
+        return;
+    }
+
+    // Clear existing scene content
+    scene->clear();
+
+    // Add the image to the scene
+    QGraphicsPixmapItem* item = scene->addPixmap(pixmap);
+    item->setPos(0, 0); // Set position to the top-left corner
+
+    // Resize the scene to fit the image
+    scene->setSceneRect(pixmap.rect());
+
+    QMessageBox::information(this, "Success", "Graph loaded successfully!");
 }
 

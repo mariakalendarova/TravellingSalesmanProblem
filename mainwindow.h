@@ -5,10 +5,11 @@
 #include <QGraphicsScene>
 #include <QMap>
 #include <QPointF>
-#include <QPair> // Add this line
-#include "tsp_solver.h" // Add this line
-#include <QTimer> // Add this line
+#include <QPair>
+#include <QTimer>
 #include <QUndoStack>
+
+#include "tsp_solver.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -32,6 +33,7 @@ private slots:
     void on_redoButton_clicked();
     void on_undoButton_clicked();
     void on_saveGraphButton_clicked();
+    void on_loadGraphButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -53,8 +55,6 @@ private:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
-
-
 };
 
 #endif // MAINWINDOW_H
