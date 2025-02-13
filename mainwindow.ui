@@ -118,12 +118,6 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuTSP">
-    <property name="title">
-     <string>TSP</string>
-    </property>
-   </widget>
-   <addaction name="menuTSP"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

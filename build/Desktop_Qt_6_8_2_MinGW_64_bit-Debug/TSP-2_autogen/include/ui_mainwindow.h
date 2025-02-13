@@ -10,13 +10,11 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
@@ -45,7 +43,6 @@ public:
     QPushButton *saveGraphButton;
     QPushButton *loadGraphButton;
     QMenuBar *menubar;
-    QMenu *menuTSP;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -132,14 +129,10 @@ public:
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
         menubar->setGeometry(QRect(0, 0, 1278, 21));
-        menuTSP = new QMenu(menubar);
-        menuTSP->setObjectName("menuTSP");
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
         MainWindow->setStatusBar(statusbar);
-
-        menubar->addAction(menuTSP->menuAction());
 
         retranslateUi(MainWindow);
 
@@ -160,7 +153,6 @@ public:
         redoButton->setText(QCoreApplication::translate("MainWindow", "Redo", nullptr));
         saveGraphButton->setText(QCoreApplication::translate("MainWindow", "Save Graph", nullptr));
         loadGraphButton->setText(QCoreApplication::translate("MainWindow", "Load Graph", nullptr));
-        menuTSP->setTitle(QCoreApplication::translate("MainWindow", "TSP", nullptr));
     } // retranslateUi
 
 };
