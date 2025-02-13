@@ -111,6 +111,19 @@
    </widget>
    <addaction name="menuTSP"/>
   </widget>
+  <widget class="QPushButton" name="saveGraphButton">
+    <property name="geometry">
+        <rect>
+            <x>10</x>
+            <y>150</y>  <!-- Adjust the position if needed -->
+            <width>100</width>
+            <height>30</height>
+        </rect>
+    </property>
+    <property name="text">
+        <string>Save Graph</string>
+    </property>
+</widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
