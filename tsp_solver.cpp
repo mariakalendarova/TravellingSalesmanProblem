@@ -18,8 +18,12 @@ TSPsolver::TSPsolver(const QMap<QString, QPointF>& cities, const QMap<QPair<QStr
             }
         }
     }
-}
+} //Initializes cities and routes, checks for missing connections.
 
+
+
+
+//Implements the Nearest Neighbor heuristic to find an approximate TSP solution.
 QList<QString> TSPsolver::solveTSP() {
     QList<QString> tour;
     QSet<QString> visited;
@@ -66,7 +70,7 @@ QList<QString> TSPsolver::solveTSP() {
     return tour;
 }
 
-
+//Retrieves the distance between two cities from the routes map (handles both directions).
 double TSPsolver::distance(const QString& city1, const QString& city2) const {
     QPair<QString, QString> route(city1, city2);
     if (routes.contains(route)) {

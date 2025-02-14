@@ -47,6 +47,7 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
     }
 }
 
+//Adds a city to the scene with validation and prevents overlap.
 void MainWindow::on_addCityButton_clicked() {
     QString cityName = ui->cityNameInput->text().trimmed();
     if (cityName.isEmpty()) {
@@ -117,6 +118,8 @@ void MainWindow::on_addCityButton_clicked() {
     ui->cityNameInput->clear();
 }
 
+
+//Connects two cities with a route, ensuring valid input and avoiding overlap.
 void MainWindow::on_addRouteButton_clicked() {
     QString city1Name = ui->city1Input->text().trimmed();
     QString city2Name = ui->city2Input->text().trimmed();
@@ -193,6 +196,7 @@ void MainWindow::on_addRouteButton_clicked() {
     }
 }
 
+//Clears all cities and routes from the scene and resets inputs.
 void MainWindow::on_resetButton_clicked() {
     scene->clear();
     cityMap.clear();
@@ -206,6 +210,7 @@ void MainWindow::on_resetButton_clicked() {
     ui->distanceInput->clear();
 }
 
+//Initializes and starts the TSP algorithm visualization.
 void MainWindow::on_startButton_clicked() {
     if (cityMap.isEmpty()) {
         QMessageBox::warning(this, "Warning", "Please add cities before starting the algorithm.");
@@ -227,6 +232,7 @@ void MainWindow::on_startButton_clicked() {
     timer->start(2000);
 }
 
+//Animates the TSP steps, highlighting the current city and path.
 void MainWindow::visualizeNextCity() {
     if (tourIndex < currentTour.size() - 1) {
         QString city1Name = currentTour[tourIndex];
@@ -303,7 +309,7 @@ void MainWindow::visualizeNextCity() {
 }
 
 
-
+//Resets city colors and border highlights.
 void MainWindow::resetCityHighlights() {
     for (QGraphicsItem *item : scene->items()) {
         if (QGraphicsEllipseItem *cityItem = dynamic_cast<QGraphicsEllipseItem*>(item)) {
@@ -313,7 +319,7 @@ void MainWindow::resetCityHighlights() {
     }
 }
 
-
+//Retrieves a city's name based on its graphical position.
 QString MainWindow::getCityNameFromEllipse(QGraphicsEllipseItem *cityItem) {
     for (auto it = cityMap.begin(); it != cityMap.end(); ++it) {
         if (QPointF(it.value().x(), it.value().y()) == cityItem->rect().center()) {
@@ -323,6 +329,7 @@ QString MainWindow::getCityNameFromEllipse(QGraphicsEllipseItem *cityItem) {
     return "";
 }
 
+//Undoes the last action using the undo stack.
 void MainWindow::on_redoButton_clicked()
 {
     if (undoStack->canRedo()) {      // Check if there is an action to redo
@@ -330,7 +337,7 @@ void MainWindow::on_redoButton_clicked()
     }
 }
 
-
+//Redoes the last undone action.
 void MainWindow::on_undoButton_clicked()
 {
     if (undoStack->canUndo()) {     // Check if there is an action to undo
@@ -338,7 +345,7 @@ void MainWindow::on_undoButton_clicked()
     }
 }
 
-
+//Saves the graph as an image (PNG, JPG, BMP).
 void MainWindow::on_saveGraphButton_clicked()
 {
     QString filePath = QFileDialog::getSaveFileName(this, "Save Graph", "", "PNG Image (*.png);;JPEG Image (*.jpg);;BMP Image (*.bmp)");
@@ -359,7 +366,7 @@ void MainWindow::on_saveGraphButton_clicked()
     QMessageBox::information(this, "Success", "Graph saved successfully!");
 }
 
-
+//Loads a saved graph image into the scene.
 void MainWindow::on_loadGraphButton_clicked()
 {
     QString filePath = QFileDialog::getOpenFileName(this, "Load Graph", "", "Images (*.png *.jpg *.bmp)");
