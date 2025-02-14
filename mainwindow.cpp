@@ -47,7 +47,6 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
     }
 }
 
-
 void MainWindow::on_addCityButton_clicked() {
     QString cityName = ui->cityNameInput->text().trimmed();
     if (cityName.isEmpty()) {
@@ -82,7 +81,7 @@ void MainWindow::on_addCityButton_clicked() {
                                    qPow(position.y() - existingPosition.y(), 2));
             if (distance < minDistance) {
                 validPosition = false;
-                break; // Reject and try again
+                break; 
             }
         }
     }
@@ -188,7 +187,7 @@ void MainWindow::on_addRouteButton_clicked() {
         QUndoCommand *addRouteCmd = new RouteCommand(scene, city1Name, city2Name, routeLine, distanceLabel);
         undoStack->push(addRouteCmd);
 
-    } else { // If line is too short to adjust without intersecting circles
+    } else { 
         QMessageBox::warning(this, "Warning", "Cities are too close.");
         return;
     }
@@ -218,7 +217,7 @@ void MainWindow::on_startButton_clicked() {
     tspSolver = new TSPsolver(cityMap, routeMap);
 
     QString startCity = cityMap.keys().first();
-    currentTour = tspSolver->solveTSP(startCity);
+    currentTour = tspSolver->solveTSP();
 
     tourIndex = 0;
 
@@ -227,8 +226,6 @@ void MainWindow::on_startButton_clicked() {
 
     timer->start(2000);
 }
-
-
 
 void MainWindow::visualizeNextCity() {
     if (tourIndex < currentTour.size() - 1) {
@@ -244,13 +241,13 @@ void MainWindow::visualizeNextCity() {
 
         resetCityHighlights();
 
-        // Highlight only the currently visited city (city1Name) with a yellow border
+        // Highlight only the currently visited city (city1Name) 
         for (QGraphicsItem *item : scene->items()) {
             if (QGraphicsEllipseItem *cityItem = dynamic_cast<QGraphicsEllipseItem*>(item)) {
                 QString cityName = getCityNameFromEllipse(cityItem);
 
                 if (cityName == city1Name) {
-                    cityItem->setPen(QPen(Qt::red, 5));  // Yellow border, keep fill white
+                    cityItem->setPen(QPen(Qt::red, 5));
                 }
             }
         }

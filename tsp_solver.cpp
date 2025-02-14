@@ -4,6 +4,7 @@
 #include <QPair>
 #include <QMap>
 #include <QtMath>
+#include <QRandomGenerator>
 
 TSPsolver::TSPsolver(const QMap<QString, QPointF>& cities, const QMap<QPair<QString, QString>, double>& routes)
     : cities(cities), routes(routes) {
@@ -19,22 +20,29 @@ TSPsolver::TSPsolver(const QMap<QString, QPointF>& cities, const QMap<QPair<QStr
     }
 }
 
-QList<QString> TSPsolver::solveTSP(const QString& startCity) {
-    QList<QString> tour;  // The tour being built
-    QSet<QString> visited; // Set of visited cities
-    QString currentCity = startCity;
+QList<QString> TSPsolver::solveTSP() {
+    QList<QString> tour;
+    QSet<QString> visited;
 
-    // Add the starting city to the tour and mark it as visited
+    if (cities.isEmpty()) {
+        qDebug() << "Error: No cities available.";
+        return tour;
+    }
+
+    // Select a random starting city
+    QStringList cityList = cities.keys();
+    QString startCity = cityList.at(QRandomGenerator::global()->bounded(cityList.size()));
+
+    QString currentCity = startCity;
     tour.append(currentCity);
     visited.insert(currentCity);
 
-    while (visited.size() < cities.size()) {            // Continue until all cities are visited
+    while (visited.size() < cities.size()) {
         QString nearestCity;
         double minDistance = -1.0;
 
-        // Iterate through all cities to find the nearest unvisited city
         for (const QString& city : cities.keys()) {
-            if (!visited.contains(city)) {              // Only consider unvisited cities
+            if (!visited.contains(city)) {
                 double dist = distance(currentCity, city);
                 if (dist >= 0 && (minDistance < 0 || dist < minDistance)) {
                     minDistance = dist;
@@ -44,20 +52,17 @@ QList<QString> TSPsolver::solveTSP(const QString& startCity) {
         }
 
         if (!nearestCity.isEmpty()) {
-            // Add the nearest unvisited city to the tour
             tour.append(nearestCity);
-            visited.insert(nearestCity);                // Mark it as visited
-            currentCity = nearestCity;                  // Move to this city
+            visited.insert(nearestCity);
+            currentCity = nearestCity;
         } else {
-            // If no unvisited connected cities are found, something went wrong
             qDebug() << "Error: No unvisited connected cities found.";
-            return tour;                                // Return the partial tour
+            return tour;
         }
     }
 
-    // After visiting all cities, return to the starting city to complete the cycle
+    // Return to the starting city
     tour.append(startCity);
-
     return tour;
 }
 

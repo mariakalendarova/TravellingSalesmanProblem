@@ -12,7 +12,7 @@
 class TSPsolver {
 public:
     TSPsolver(const QMap<QString, QPointF>& cities, const QMap<QPair<QString, QString>, double>& routes);
-    QList<QString> solveTSP(const QString& startCity);
+    QList<QString> solveTSP();
 
 private:
     const QMap<QString, QPointF>& cities;
